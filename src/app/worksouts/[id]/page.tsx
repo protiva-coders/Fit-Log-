@@ -1,3 +1,5 @@
+import WorkoutActions from "@/components/WorkoutActions";
+
 type Props = {
   params: Promise<{ id: string }>;
 };
@@ -101,17 +103,7 @@ const WorkoutDetailsPage = async ({ params }: Props) => {
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-
-            <button className="rounded-full bg-[#ccff00] px-6 py-3 font-bold text-black">
-              Add to Today’s Plan
-            </button>
-
-            <button className="rounded-full border border-[#ccff00] px-6 py-3 font-bold text-white">
-              Save for Later
-            </button>
-
-          </div>
+          <WorkoutActions workoutId={workout.id} />
 
         </div>
       </div>
