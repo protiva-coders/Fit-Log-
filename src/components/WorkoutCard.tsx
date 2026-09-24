@@ -1,8 +1,9 @@
+import { IWorkout } from "@/types/WorkoutTypes";
 import Image from "next/image";
 import Link from "next/link";
 
 type WorkoutCardProps = {
-  workout: any;
+  workout: IWorkout;
 };
 
 const WorkoutCard = ({ workout }: WorkoutCardProps) => {

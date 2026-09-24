@@ -1,3 +1,4 @@
+import { IWorkout } from "@/types/WorkoutTypes";
 import WorkoutCard from "./WorkoutCard";
 
 const WorkoutLibrary = async () => {
@@ -14,7 +15,7 @@ const WorkoutLibrary = async () => {
           Workout Library
         </h2>
          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {workouts.map((workout: any) => (
+          {workouts.map((workout: IWorkout) => (
             <WorkoutCard
               key={workout.id}
               workout={workout}
