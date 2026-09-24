@@ -6,7 +6,7 @@ import Image from "next/image";
 const Navbar = () => {
   return (
     <nav className="border-b border-gray-800 bg-black text-white">
-      <div className="flex items-center justify-between px-6 py-5">
+      <div className="flex flex-col gap-5 px-4 py-4 md:flex-row md:items-center md:justify-between md:px-6 md:py-5">
 
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -15,7 +15,7 @@ const Navbar = () => {
         </Link>
 
         {/* Navigation */}
-        <div className="flex gap-8">
+        <div className="flex gap-6 md:gap-8">
           <Link href="/">Workouts</Link>
           <Link href="/my-plan">My Plan</Link>
         </div>

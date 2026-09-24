@@ -4,8 +4,8 @@ import banner from "@/assets/banner.png";
 
 const Banner = () => {
   return (
-    <section className="bg-black text-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-10 px-6 py-20">
+    <section className="my-7 mx-auto max-w-7xl rounded-3xl bg-emerald-950 text-white">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-10 px-6 py-12 md:py-20 lg:flex-row">
 
         {/* Left Content */}
         <div className="max-w-xl">
@@ -33,10 +33,11 @@ const Banner = () => {
         </div>
 
         {/* Right Image */}
-        <div>
+        <div className="w-full lg:w-auto">
           <Image
             src={banner}
             alt="Workout Banner"
+            className="h-auto w-full"
           />
         </div>
 
@@ -46,4 +47,3 @@ const Banner = () => {
 };
 
 export default Banner;
-
