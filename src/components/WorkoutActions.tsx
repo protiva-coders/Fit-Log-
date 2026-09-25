@@ -22,6 +22,8 @@ const WorkoutActions = ({ workoutId }: Props) => {
         JSON.stringify(plan)
       );
 
+      window.dispatchEvent(new Event("storage"));
+
       toast.success("Workout added to today's plan!");
     } else {
       toast.info("This workout is already in your plan!");
@@ -42,6 +44,8 @@ const WorkoutActions = ({ workoutId }: Props) => {
         "fitlog-saved",
         JSON.stringify(saved)
       );
+
+      window.dispatchEvent(new Event("storage"));
 
       toast.success("Workout saved for later!");
     } else {
