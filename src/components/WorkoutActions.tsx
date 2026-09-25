@@ -28,6 +28,27 @@ const WorkoutActions = ({ workoutId }: Props) => {
     }
   };
 
+  const handleSaveForLater = () => {
+    const savedWorkouts = localStorage.getItem("fitlog-saved");
+
+    const saved: number[] = savedWorkouts
+      ? JSON.parse(savedWorkouts)
+      : [];
+
+    if (!saved.includes(workoutId)) {
+      saved.push(workoutId);
+
+      localStorage.setItem(
+        "fitlog-saved",
+        JSON.stringify(saved)
+      );
+
+      toast.success("Workout saved for later!");
+    } else {
+      toast.info("This workout is already saved!");
+    }
+  };
+
   return (
     <div className="mt-8 flex flex-col gap-4 sm:flex-row">
       <button
@@ -37,7 +58,10 @@ const WorkoutActions = ({ workoutId }: Props) => {
         Add to Today’s Plan
       </button>
 
-      <button className="rounded-full border border-[#ccff00] px-6 py-3 font-bold text-white">
+      <button
+        onClick={handleSaveForLater}
+        className="rounded-full border border-[#ccff00] px-6 py-3 font-bold text-white"
+      >
         Save for Later
       </button>
     </div>

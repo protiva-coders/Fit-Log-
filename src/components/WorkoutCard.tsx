@@ -9,7 +9,7 @@ type WorkoutCardProps = {
 const WorkoutCard = ({ workout }: WorkoutCardProps) => {
   return (
     <Link
-      href={`/workouts/${workout.id}`}
+      href={`/workouts/${String(workout.id)}`}
       className="overflow-hidden rounded-2xl bg-emerald-950"
     >
       <div className="relative h-60 w-full">

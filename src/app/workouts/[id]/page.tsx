@@ -8,8 +8,19 @@ const WorkoutDetailsPage = async ({ params }: Props) => {
   const { id } = await params;
 
   const res = await fetch(
-    `https://api.abcz.workers.dev/api/fitlog/${id}`
+    `https://api.abcz.workers.dev/api/fitlog/${id}`,
+    {
+      cache: "no-store",
+    }
   );
+
+  if (!res.ok) {
+    return (
+      <div className="p-10 text-center text-white">
+        Workout not found
+      </div>
+    );
+  }
 
   const workout = await res.json();
 
@@ -57,6 +68,7 @@ const WorkoutDetailsPage = async ({ params }: Props) => {
               <p className="text-sm text-gray-400">
                 Equipment
               </p>
+
               <p className="mt-2 font-bold">
                 {workout.equipment}
               </p>
@@ -66,6 +78,7 @@ const WorkoutDetailsPage = async ({ params }: Props) => {
               <p className="text-sm text-gray-400">
                 Duration
               </p>
+
               <p className="mt-2 font-bold">
                 {workout.duration} min
               </p>
@@ -75,6 +88,7 @@ const WorkoutDetailsPage = async ({ params }: Props) => {
               <p className="text-sm text-gray-400">
                 Calories
               </p>
+
               <p className="mt-2 font-bold">
                 {workout.calories} kcal
               </p>
@@ -84,6 +98,7 @@ const WorkoutDetailsPage = async ({ params }: Props) => {
               <p className="text-sm text-gray-400">
                 Rating
               </p>
+
               <p className="mt-2 font-bold">
                 ⭐ {workout.rating}
               </p>
@@ -112,3 +127,4 @@ const WorkoutDetailsPage = async ({ params }: Props) => {
 };
 
 export default WorkoutDetailsPage;
+
