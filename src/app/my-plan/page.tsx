@@ -6,11 +6,12 @@ import Link from "next/link";
 type Workout = {
   id: number;
   name: string;
-  category: string;
+  category?: string;
+  muscleGroups: string[];
   difficulty: string;
   equipment: string;
   duration: number;
-  calories: number;
+  caloriesBurned: number;
   rating: number;
   image: string;
 };
@@ -47,7 +48,11 @@ const MyPlanPage = () => {
               `https://api.abcz.workers.dev/api/fitlog/${id}`
             );
 
-            return res.json();
+            if (!res.ok) {
+              throw new Error("Failed to fetch workout");
+            }
+
+            return await res.json();
           })
         );
 
@@ -57,13 +62,19 @@ const MyPlanPage = () => {
               `https://api.abcz.workers.dev/api/fitlog/${id}`
             );
 
-            return res.json();
+            if (!res.ok) {
+              throw new Error("Failed to fetch saved workout");
+            }
+
+            return await res.json();
           })
         );
 
         setWorkouts(planData);
         setSavedWorkouts(savedData);
         setCompletedIds(completedArray);
+      } catch (error) {
+        console.error("Failed to load workouts:", error);
       } finally {
         setLoading(false);
       }
@@ -72,6 +83,7 @@ const MyPlanPage = () => {
     loadData();
   }, []);
 
+  // Remove from Today's Plan
   const handleRemove = (id: number) => {
     const updatedWorkouts = workouts.filter(
       (workout) => workout.id !== id
@@ -85,8 +97,12 @@ const MyPlanPage = () => {
         updatedWorkouts.map((workout) => workout.id)
       )
     );
+
+    // Navbar Plan count update
+    window.dispatchEvent(new Event("fitlog-plan-updated"));
   };
 
+  // Remove from Saved
   const handleRemoveSaved = (id: number) => {
     const updatedSaved = savedWorkouts.filter(
       (workout) => workout.id !== id
@@ -100,8 +116,12 @@ const MyPlanPage = () => {
         updatedSaved.map((workout) => workout.id)
       )
     );
+
+    // Navbar Saved count update
+    window.dispatchEvent(new Event("fitlog-saved-updated"));
   };
 
+  // Mark workout as completed
   const handleMarkAsDone = (id: number) => {
     if (!completedIds.includes(id)) {
       const updatedCompleted = [...completedIds, id];
@@ -118,11 +138,23 @@ const MyPlanPage = () => {
   const currentWorkouts =
     activeTab === "plan" ? workouts : savedWorkouts;
 
+  const totalMinutes = workouts.reduce(
+    (total, workout) =>
+      total + Number(workout.duration),
+    0
+  );
+
+  const totalCalories = workouts.reduce(
+    (total, workout) =>
+      total + Number(workout.caloriesBurned),
+    0
+  );
+
   return (
     <main className="min-h-screen px-6 py-12 text-white">
       <div className="mx-auto max-w-7xl">
 
-        {/* Header */}
+        {/* Page Title */}
         <h1 className="text-4xl font-extrabold">
           My Plan
         </h1>
@@ -150,11 +182,7 @@ const MyPlanPage = () => {
             </p>
 
             <h2 className="mt-2 text-3xl font-bold">
-              {workouts.reduce(
-                (total, workout) =>
-                  total + workout.duration,
-                0
-              )}
+              {totalMinutes}
             </h2>
           </div>
 
@@ -164,11 +192,7 @@ const MyPlanPage = () => {
             </p>
 
             <h2 className="mt-2 text-3xl font-bold">
-              {workouts.reduce(
-                (total, workout) =>
-                  total + workout.calories,
-                0
-              )}
+              {totalCalories}
             </h2>
           </div>
 
@@ -210,6 +234,7 @@ const MyPlanPage = () => {
 
           /* Empty State */
           <div className="mt-10 rounded-3xl bg-emerald-950 px-6 py-16 text-center">
+
             <h2 className="text-2xl font-bold">
               No workouts here yet
             </h2>
@@ -226,6 +251,7 @@ const MyPlanPage = () => {
             >
               Browse Workouts
             </Link>
+
           </div>
 
         ) : (
@@ -234,9 +260,9 @@ const MyPlanPage = () => {
           <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 
             {currentWorkouts.map((workout) => {
-              const isCompleted = completedIds.includes(
-                workout.id
-              );
+
+              const isCompleted =
+                completedIds.includes(workout.id);
 
               return (
                 <div
@@ -246,6 +272,7 @@ const MyPlanPage = () => {
                   }`}
                 >
 
+                  {/* Image */}
                   <img
                     src={workout.image}
                     alt={workout.name}
@@ -254,23 +281,29 @@ const MyPlanPage = () => {
 
                   <div className="p-5">
 
+                    {/* Name */}
                     <h2 className="text-xl font-bold">
                       {workout.name}
                     </h2>
 
+                    {/* Workout Info */}
                     <p className="mt-2 text-sm text-gray-400">
-                      {workout.category} • {workout.duration} min •{" "}
-                      {workout.calories} kcal
+                      {workout.muscleGroups.join(", ")} •{" "}
+                      {workout.duration} min •{" "}
+                      {workout.caloriesBurned} kcal
                     </p>
 
+                    {/* Completed */}
                     {isCompleted && (
                       <p className="mt-3 font-bold text-[#ccff00]">
                         ✓ Completed
                       </p>
                     )}
 
+                    {/* Buttons */}
                     <div className="mt-5 flex flex-wrap gap-3">
 
+                      {/* View Details */}
                       <Link
                         href={`/workouts/${workout.id}`}
                         className="rounded-full bg-[#ccff00] px-4 py-2 text-sm font-bold text-black"
@@ -278,6 +311,7 @@ const MyPlanPage = () => {
                         View Details
                       </Link>
 
+                      {/* Mark as Done */}
                       {activeTab === "plan" && (
                         <button
                           onClick={() =>
@@ -292,6 +326,7 @@ const MyPlanPage = () => {
                         </button>
                       )}
 
+                      {/* Remove */}
                       <button
                         onClick={() => {
                           if (activeTab === "plan") {
@@ -321,4 +356,3 @@ const MyPlanPage = () => {
 };
 
 export default MyPlanPage;
-

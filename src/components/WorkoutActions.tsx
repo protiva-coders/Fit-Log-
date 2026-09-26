@@ -22,7 +22,8 @@ const WorkoutActions = ({ workoutId }: Props) => {
         JSON.stringify(plan)
       );
 
-      window.dispatchEvent(new Event("storage"));
+      // Navbar-এর Plan count update করবে
+      window.dispatchEvent(new Event("fitlog-plan-updated"));
 
       toast.success("Workout added to today's plan!");
     } else {
@@ -45,7 +46,8 @@ const WorkoutActions = ({ workoutId }: Props) => {
         JSON.stringify(saved)
       );
 
-      window.dispatchEvent(new Event("storage"));
+      // Navbar-এর Saved count update করবে
+      window.dispatchEvent(new Event("fitlog-saved-updated"));
 
       toast.success("Workout saved for later!");
     } else {

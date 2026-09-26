@@ -14,13 +14,8 @@ const Navbar = () => {
       const plan = localStorage.getItem("fitlog-plan");
       const saved = localStorage.getItem("fitlog-saved");
 
-      const planIds: number[] = plan
-        ? JSON.parse(plan)
-        : [];
-
-      const savedIds: number[] = saved
-        ? JSON.parse(saved)
-        : [];
+      const planIds: number[] = plan ? JSON.parse(plan) : [];
+      const savedIds: number[] = saved ? JSON.parse(saved) : [];
 
       setPlanCount(planIds.length);
       setSavedCount(savedIds.length);
@@ -29,33 +24,30 @@ const Navbar = () => {
     updateCounts();
 
     window.addEventListener("storage", updateCounts);
+    window.addEventListener("fitlog-plan-updated", updateCounts);
+    window.addEventListener("fitlog-saved-updated", updateCounts);
 
     return () => {
       window.removeEventListener("storage", updateCounts);
+      window.removeEventListener("fitlog-plan-updated", updateCounts);
+      window.removeEventListener("fitlog-saved-updated", updateCounts);
     };
   }, []);
 
   return (
     <nav className="border-b border-gray-800 bg-black text-white">
       <div className="flex flex-col gap-5 px-4 py-4 md:flex-row md:items-center md:justify-between md:px-6 md:py-5">
-
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image src={logo} alt="Fit Log" />
-          <span className="text-2xl font-bold">
-            FITLOG
-          </span>
+          <span className="text-2xl font-bold">FITLOG</span>
         </Link>
 
         {/* Navigation */}
         <div className="flex gap-6 md:gap-8">
-          <Link href="/">
-            Workouts
-          </Link>
+          <Link href="/">Workouts</Link>
 
-          <Link href="/my-plan">
-            My Plan
-          </Link>
+          <Link href="/my-plan">My Plan</Link>
         </div>
 
         {/* Badges */}
@@ -74,11 +66,9 @@ const Navbar = () => {
             Saved {savedCount}
           </Link>
         </div>
-
       </div>
     </nav>
   );
 };
 
 export default Navbar;
-
